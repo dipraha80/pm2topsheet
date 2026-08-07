@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathan Motors-2 Cash Form & Summary</title>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        body {
+            background-color: #e2e8f0;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Top Action Bar */
+        .top-action-bar {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 12px;
+        }
+
+        .bar-title {
+            font-family: system-ui, -apple-system, sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: #1e293b;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            border: none;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-print { background-color: #16a34a; color: white; }
+        .btn-print:hover { background-color: #15803d; }
+
+        .btn-clear { background-color: #dc2626; color: white; }
+        .btn-clear:hover { background-color: #b91c1c; }
+
+        .btn-add { background-color: #0284c7; color: white; }
+        .btn-add:hover { background-color: #0369a1; }
+
+        /* Quick Panel */
+        .quick-panel {
+            width: 100%;
+            max-width: 1100px;
+            background: #ffffff;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        .quick-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .quick-label {
+            font-weight: 700;
+            font-size: 15px;
+            color: #1e293b;
+            min-width: 170px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .quick-input {
+            padding: 9px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .quick-input:focus {
+            border-color: #0284c7;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+        }
+
+        /* Sheet Container (A4 Landscape) */
+        .page-container {
+            background: white;
+            width: 1100px;
+            min-height: 820px;
+            padding: 22px 25px 12px 25px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sheet-body {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .sheet-half {
+            width: 49.5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Header Styling */
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .logo-img {
+            height: 52px;
+            width: auto;
+            margin-right: 12px;
+            object-fit: contain;
+        }
+
+        .header-text h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .header-text p {
+            margin: 1px 0 0 0;
+            font-style: italic;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .date-row {
+            text-align: right;
+            font-size: 13px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .date-input {
+            border: none;
+            border-bottom: 1px solid #000;
+            width: 130px;
+            text-align: center;
+            outline: none;
+            font-size: 13px;
+            font-family: inherit;
+            background: transparent;
+        }
+
+        /* Table Layout Rules */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            table-layout: fixed;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 0;
+            height: 32px;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        th {
+            font-weight: bold;
+            background-color: #f1f5f9;
+            padding: 3px 0;
+            height: 28px;
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+
+        .gray-bg { background-color: #cbd5e1; }
+
+        /* Cell Content Wrapper */
+        .cell-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            position: relative;
+        }
+
+        .cell-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            text-align: center;
+            font-size: 12px;
+            font-family: inherit;
+            padding: 0;
+            margin: 0;
+            transition: width 0.05s ease;
+        }
+
+        /* Bold All Summation & Calculated Fields */
+        .amount-center, 
+        #sub-bkash, 
+        #sub-nagad, 
+        #sub-bank, 
+        #grand-total, 
+        #top-cash-col1, 
+        #top-cash-col2 {
+            font-weight: bold !important;
+            font-size: 12px;
+            color: #000;
+        }
+
+        /* Hide Number Spinners */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .end-mark {
+            font-size: 11px;
+            font-weight: bold;
+            color: #000;
+            margin-left: 1px;
+            display: none;
+            user-select: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .start-mark {
+            font-size: 11px;
+            font-weight: bold;
+            color: #000;
+            margin-right: 1px;
+            display: none;
+            user-select: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .cell-wrapper.has-value .end-mark,
+        .cell-wrapper.has-value .start-mark {
+            display: inline-block;
+        }
+
+        .words-row td {
+            text-align: left;
+            padding: 6px 8px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .words-input {
+            width: calc(100% - 100px);
+            border: none;
+            border-bottom: 1px dotted #000;
+            outline: none;
+            font-size: 12px;
+            font-weight: bold;
+            font-style: italic;
+            background: transparent;
+            padding-left: 5px;
+        }
+
+        .summary-table td:first-child {
+            text-align: left;
+            padding-left: 8px;
+        }
+
+        .signature {
+            text-align: right;
+            margin-top: 25px;
+            margin-bottom: 5px;
+            padding-right: 25px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* Footer credits on both sides with 8px font */
+        .dev-footer {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 8px;
+            font-style: italic;
+            color: #64748b;
+            margin-top: 10px;
+            padding-top: 2px;
+            border-top: 1px dashed #cbd5e1;
+        }
+
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .top-action-bar, .quick-panel {
+                display: none !important;
+            }
+            .page-container {
+                box-shadow: none;
+                width: 100vw;
+                height: 100vh;
+                min-height: 100vh;
+                padding: 8mm 10mm;
+            }
+            input[type="date"]::-webkit-calendar-picker-indicator {
+                display: none;
+                -webkit-appearance: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Action Bar -->
+    <div class="top-action-bar">
+        <div class="bar-title">Pathan Motors-2 Cash Entry & Summary System</div>
+        <div class="action-btns">
+            <button class="btn btn-clear" onclick="clearAll()">⟲ Clear All</button>
+            <button class="btn btn-print" onclick="window.print()">🖨️ Print / Save PDF</button>
+        </div>
+    </div>
+
+    <!-- Quick Entry Panel -->
+    <div class="quick-panel">
+        <!-- Row 1: Opening Cash -->
+        <div class="quick-row">
+            <label class="quick-label">
+                💵 Opening Total Cash:
+            </label>
+            <input type="number" id="quick-opening-cash" class="quick-input" placeholder="Enter Opening Cash Amount (Tk)" style="width: 260px;" oninput="updateOpeningCash()">
+            <span style="font-size: 13px; color: #64748b; font-style: italic;">(Auto syncs to Summary Table top Total Cash)</span>
+        </div>
+
+        <!-- Row 2: Quick Entry -->
+        <div class="quick-row">
+            <label class="quick-label">
+                ⚡ Quick Transaction:
+            </label>
+            <select id="quick-type" class="quick-input" onchange="toggleQuickFields()" style="font-weight: bold; border-color: #0284c7; cursor: pointer;">
+                <option value="BKASH">BKASH</option>
+                <option value="NAGAD">NAGAD</option>
+                <option value="BANK">BANK</option>
+                <option value="CARD">CARD</option>
+                <option value="OTHERS">OTHERS</option>
+            </select>
+            <input type="text" id="quick-field1" class="quick-input" placeholder="Last Digit" style="width: 160px;">
+            <input type="number" id="quick-amount" class="quick-input" placeholder="Amount (Tk)" style="width: 160px;">
+            <button class="btn btn-add" style="padding: 9px 20px; font-size: 14px;" onclick="addQuickEntry()">➕ Add to Table</button>
+        </div>
+    </div>
+
+    <!-- Page Container -->
+    <div class="page-container">
+        
+        <div class="sheet-body">
+            <!-- ================= LEFT TABLE (MAIN ENTRY SHEET) ================= -->
+            <div class="sheet-half">
+                <div>
+                    <div class="header">
+                        <img src="https://pathanmotors.com/wp-content/uploads/2018/10/cropped-logo-3-1.png" alt="Pathan Motors Logo" class="logo-img" onerror="this.style.display='none'">
+                        <div class="header-text">
+                            <h2>PATHAN MOTORS-2</h2>
+                            <p>Degarkanda Bypass, Mymensingh</p>
+                        </div>
+                    </div>
+
+                    <div class="date-row">
+                        Date: <input type="text" id="left-date" class="date-input" onfocus="handleDateFocus(this)" onblur="handleDateBlur(this)" onchange="handleDateBlur(this)">
+                    </div>
+
+                    <table id="main-table">
+                        <colgroup>
+                            <col style="width: 8%;">
+                            <col style="width: 14%;">
+                            <col style="width: 16%;">
+                            <col style="width: 14%;">
+                            <col style="width: 16%;">
+                            <col style="width: 16%;">
+                            <col style="width: 16%;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th rowspan="2">SL.</th>
+                                <th colspan="2">BKASH</th>
+                                <th colspan="2">NAGAD</th>
+                                <th colspan="2">BANK</th>
+                            </tr>
+                            <tr>
+                                <th><i>Last Digit</i></th>
+                                <th><i>Amount</i></th>
+                                <th><i>Last Digit</i></th>
+                                <th><i>Amount</i></th>
+                                <th><i>Name</i></th>
+                                <th><i>Amount</i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 14 Rows Generated -->
+                            <script>
+                                for(let i=1; i<=14; i++){
+                                    document.write(`
+                                        <tr>
+                                            <td>${i}.</td>
+                                            <td><div class="cell-wrapper"><input type="text" class="cell-input nav-cell"></div></td>
+                                            <td><div class="cell-wrapper"><input type="number" class="cell-input bkash-amt nav-cell" oninput="calculateLeftTable()"><span class="end-mark">/-</span></div></td>
+                                            <td><div class="cell-wrapper"><input type="text" class="cell-input nav-cell"></div></td>
+                                            <td><div class="cell-wrapper"><input type="number" class="cell-input nagad-amt nav-cell" oninput="calculateLeftTable()"><span class="end-mark">/-</span></div></td>
+                                            <td><div class="cell-wrapper"><input type="text" class="cell-input bank-name nav-cell" oninput="calculateLeftTable()"></div></td>
+                                            <td><div class="cell-wrapper"><input type="number" class="cell-input bank-amt nav-cell" oninput="calculateLeftTable()"><span class="end-mark">/-</span></div></td>
+                                        </tr>
+                                    `);
+                                }
+                            </script>
+                            <!-- SUB Row -->
+                            <tr class="gray-bg">
+                                <td style="font-weight: bold;">SUB</td>
+                                <td></td>
+                                <td><div class="cell-wrapper"><input type="number" id="sub-bkash" class="cell-input amount-center" readonly><span class="end-mark">/-</span></div></td>
+                                <td></td>
+                                <td><div class="cell-wrapper"><input type="number" id="sub-nagad" class="cell-input amount-center" readonly><span class="end-mark">/-</span></div></td>
+                                <td></td>
+                                <td><div class="cell-wrapper"><input type="number" id="sub-bank" class="cell-input amount-center" readonly><span class="end-mark">/-</span></div></td>
+                            </tr>
+                            <!-- Grand Total Row -->
+                            <tr>
+                                <td colspan="2" style="font-weight: bold; text-align: left; padding-left: 5px;">Grand Total Amount:</td>
+                                <td colspan="5">
+                                    <div class="cell-wrapper" style="justify-content: center;">
+                                        <input type="number" id="grand-total" class="cell-input amount-center" style="font-size: 12px; font-weight: bold;" readonly>
+                                        <span class="end-mark">/-</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Words Row -->
+                            <tr class="words-row">
+                                <td colspan="7">
+                                    Words: <input type="text" id="left-words" class="words-input" placeholder="Taka in words...">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="signature">
+                    Signature
+                </div>
+            </div>
+
+            <!-- ================= RIGHT TABLE (CASH SUMMARY SHEET) ================= -->
+            <div class="sheet-half">
+                <div>
+                    <div class="header" style="justify-content: center; flex-direction: column; text-align: center;">
+                        <div style="display: flex; align-items: center;">
+                            <img src="https://pathanmotors.com/wp-content/uploads/2018/10/cropped-logo-3-1.png" alt="Pathan Motors Logo" class="logo-img" onerror="this.style.display='none'">
+                            <div class="header-text" style="text-align: left;">
+                                <h2>PATHAN MOTORS-2</h2>
+                                <h3 style="margin: 0; font-size: 15px; font-weight: normal;">CASH SUMMERY</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="date-row">
+                        Date: <input type="text" id="right-date" class="date-input" onfocus="handleDateFocus(this)" onblur="handleDateBlur(this)" onchange="handleDateBlur(this)">
+                    </div>
+
+                    <table id="summary-table" class="summary-table">
+                        <colgroup>
+                            <col style="width: 36%;">
+                            <col style="width: 32%;">
+                            <col style="width: 32%;">
+                        </colgroup>
+                        <tbody>
+                            <!-- TOP TOTAL CASH -->
+                            <tr data-type="TOP_TOTAL_CASH">
+                                <td style="font-weight: bold;">TOTAL CASH</td>
+                                <td><div class="cell-wrapper"><input type="number" id="top-cash-col1" class="cell-input nav-cell" oninput="calculateSummary()"><span class="end-mark">/-</span></div></td>
+                                <td><div class="cell-wrapper"><input type="number" id="top-cash-col2" class="cell-input nav-cell" oninput="calculateSummary()"><span class="end-mark">/-</span></div></td>
+                            </tr>
+                        </tbody>
+                        <!-- Dynamic Rows Container (BKASH, CASH, NAGAD, CASH, BANK, CASH, CARD, OTHERS, etc.) -->
+                        <tbody id="summary-dynamic-tbody"></tbody>
+                        <tbody>
+                            <!-- Words Row -->
+                            <tr class="words-row">
+                                <td colspan="3">
+                                    Words: <input type="text" id="right-words" class="words-input" placeholder="Taka in words...">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="signature">
+                    Signature
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer info on both sides (8px) -->
+        <div class="dev-footer">
+            <span>Software Developed By: Dip Raha, Mobile: 01910226680</span>
+            <span>Software Developed By: Dip Raha, Mobile: 01910226680</span>
+        </div>
+
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // Extra entries arrays for multiple Card / Others
+        let cardEntries = [];
+        let othersEntries = [];
+
+        // Date formatting helpers
+        function formatDateString(isoString) {
+            if (!isoString) return '';
+            const parts = isoString.split('-');
+            if (parts.length !== 3) return isoString;
+            const year = parts[0];
+            const monthIdx = parseInt(parts[1], 10) - 1;
+            const day = String(parts[2]).padStart(2, '0');
+            const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+            if (monthIdx >= 0 && monthIdx < 12) {
+                return `${day} ${months[monthIdx]}, ${year}`;
+            }
+            return isoString;
+        }
+
+        function getTodayFormatted() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const iso = `${year}-${month}-${day}`;
+            return {
+                iso: iso,
+                formatted: formatDateString(iso)
+            };
+        }
+
+        function handleDateFocus(input) {
+            input.type = 'date';
+            if (input.dataset.isoValue) {
+                input.value = input.dataset.isoValue;
+            }
+        }
+
+        function handleDateBlur(input) {
+            if (input.value && input.value.includes('-')) {
+                input.dataset.isoValue = input.value;
+                const formatted = formatDateString(input.value);
+                input.type = 'text';
+                input.value = formatted;
+            } else if (!input.value && input.dataset.isoValue) {
+                const formatted = formatDateString(input.dataset.isoValue);
+                input.type = 'text';
+                input.value = formatted;
+            } else {
+                input.type = 'text';
+            }
+            
+            // Sync both left and right date inputs
+            const otherId = input.id === 'left-date' ? 'right-date' : 'left-date';
+            const otherInput = document.getElementById(otherId);
+            if (otherInput) {
+                otherInput.value = input.value;
+                if (input.dataset.isoValue) {
+                    otherInput.dataset.isoValue = input.dataset.isoValue;
+                }
+            }
+        }
+
+        // 1. Initialize Date and Listeners on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const dateObj = getTodayFormatted();
+            const leftDate = document.getElementById('left-date');
+            const rightDate = document.getElementById('right-date');
+            
+            if (leftDate) {
+                leftDate.value = dateObj.formatted;
+                leftDate.dataset.isoValue = dateObj.iso;
+            }
+            if (rightDate) {
+                rightDate.value = dateObj.formatted;
+                rightDate.dataset.isoValue = dateObj.iso;
+            }
+
+            updateEndMarks();
+
+            // Dynamic character width calculation on input
+            document.addEventListener('input', (e) => {
+                if (e.target && e.target.classList.contains('cell-input')) {
+                    updateEndMarks();
+                }
+            });
+
+            // Quick Field Navigation (Enter in Field 1 moves focus to Amount, Enter in Amount adds entry)
+            const qField1 = document.getElementById('quick-field1');
+            const qAmt = document.getElementById('quick-amount');
+
+            if (qField1) {
+                qField1.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (qAmt) qAmt.focus();
+                    }
+                });
+            }
+
+            if (qAmt) {
+                qAmt.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addQuickEntry();
+                    }
+                });
+            }
+        });
+
+        // 2. Number to Taka Words Function (Accurate Bangladeshi Crores/Lakhs/Thousands System)
+        function numberToWords(num) {
+            if (!num || isNaN(num) || num <= 0) return '';
+            num = Math.floor(num);
+
+            const single = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+            const double = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+            function convertTwoDigits(n) {
+                if (n < 20) return single[n];
+                let ten = Math.floor(n / 10);
+                let unit = n % 10;
+                return double[ten] + (unit ? ' ' + single[unit] : '');
+            }
+
+            function convertSection(n) {
+                if (n === 0) return '';
+                let str = '';
+                let crore = Math.floor(n / 10000000);
+                n %= 10000000;
+                let lakh = Math.floor(n / 100000);
+                n %= 100000;
+                let thousand = Math.floor(n / 1000);
+                n %= 1000;
+                let hundred = Math.floor(n / 100);
+                let remainder = n % 100;
+
+                if (crore > 0) {
+                    str += convertSection(crore) + ' Crore ';
+                }
+                if (lakh > 0) {
+                    str += convertTwoDigits(lakh) + ' Lakh ';
+                }
+                if (thousand > 0) {
+                    str += convertTwoDigits(thousand) + ' Thousand ';
+                }
+                if (hundred > 0) {
+                    str += single[hundred] + ' Hundred ';
+                }
+                if (remainder > 0) {
+                    str += convertTwoDigits(remainder) + ' ';
+                }
+                return str;
+            }
+
+            let result = convertSection(num).trim();
+            return result ? result + ' Taka Only' : '';
+        }
+
+        // 3. Update End Mark Visibility (/-) & Dynamic Character Width
+        function updateEndMarks() {
+            document.querySelectorAll('.cell-wrapper').forEach(wrapper => {
+                const input = wrapper.querySelector('input');
+                const endMark = wrapper.querySelector('.end-mark');
+                if (input) {
+                    const val = input.value;
+                    if (val !== '' && val !== null) {
+                        wrapper.classList.add('has-value');
+                        if (endMark) {
+                            const len = String(val).length;
+                            input.style.width = (len + 0.3) + 'ch';
+                            input.style.textAlign = 'right';
+                        }
+                    } else {
+                        wrapper.classList.remove('has-value');
+                        if (endMark) {
+                            input.style.width = '100%';
+                            input.style.textAlign = 'center';
+                        }
+                    }
+                }
+            });
+        }
+
+        // 4. Calculate Main Table (Left)
+        function calculateLeftTable() {
+            let bkashSum = 0, nagadSum = 0, bankSum = 0;
+
+            document.querySelectorAll('.bkash-amt').forEach(input => bkashSum += parseFloat(input.value) || 0);
+            document.querySelectorAll('.nagad-amt').forEach(input => nagadSum += parseFloat(input.value) || 0);
+            document.querySelectorAll('.bank-amt').forEach(input => bankSum += parseFloat(input.value) || 0);
+
+            document.getElementById('sub-bkash').value = bkashSum ? bkashSum : '';
+            document.getElementById('sub-nagad').value = nagadSum ? nagadSum : '';
+            document.getElementById('sub-bank').value = bankSum ? bankSum : '';
+
+            let grandTotal = bkashSum + nagadSum + bankSum;
+            document.getElementById('grand-total').value = grandTotal ? grandTotal : '';
+            document.getElementById('left-words').value = numberToWords(grandTotal);
+
+            calculateSummary();
+        }
+
+        // Sync Opening Cash
+        function updateOpeningCash() {
+            const val = document.getElementById('quick-opening-cash').value;
+            const topCol2 = document.getElementById('top-cash-col2');
+            if (topCol2) {
+                topCol2.value = val ? val : '';
+                calculateSummary();
+            }
+        }
+
+        // Toggle Quick Fields Placeholder
+        function toggleQuickFields() {
+            const type = document.getElementById('quick-type').value;
+            const field1 = document.getElementById('quick-field1');
+            if (type === 'BANK') {
+                field1.placeholder = 'Bank Name';
+            } else if (type === 'CARD') {
+                field1.placeholder = 'Card / Details';
+            } else if (type === 'OTHERS') {
+                field1.placeholder = 'Details / Note';
+            } else {
+                field1.placeholder = 'Last Digit';
+            }
+        }
+
+        // Add Quick Entry
+        function addQuickEntry() {
+            const type = document.getElementById('quick-type').value;
+            const field1Val = document.getElementById('quick-field1').value.trim();
+            const amtVal = document.getElementById('quick-amount').value;
+
+            if (!amtVal) return;
+
+            if (type === 'CARD') {
+                cardEntries.push({ desc: field1Val || 'Card', amt: parseFloat(amtVal) || 0 });
+            } else if (type === 'OTHERS') {
+                othersEntries.push({ desc: field1Val || 'Others', amt: parseFloat(amtVal) || 0 });
+            } else {
+                const rows = document.querySelectorAll('#main-table tbody tr');
+                for (let row of rows) {
+                    let digitCol, amtCol;
+                    if (type === 'BKASH') {
+                        digitCol = row.cells[1].querySelector('input');
+                        amtCol = row.cells[2].querySelector('input');
+                    } else if (type === 'NAGAD') {
+                        digitCol = row.cells[3].querySelector('input');
+                        amtCol = row.cells[4].querySelector('input');
+                    } else if (type === 'BANK') {
+                        digitCol = row.cells[5].querySelector('input');
+                        amtCol = row.cells[6].querySelector('input');
+                    }
+
+                    if (digitCol && amtCol && !amtCol.value) {
+                        digitCol.value = field1Val;
+                        amtCol.value = amtVal;
+                        break;
+                    }
+                }
+            }
+
+            calculateLeftTable();
+
+            // Clear inputs and refocus
+            document.getElementById('quick-field1').value = '';
+            document.getElementById('quick-amount').value = '';
+            document.getElementById('quick-field1').focus();
+        }
+
+        // 5. Dynamic Summary Table Calculation & Serial Step-Down Cash Rendering
+        function calculateSummary() {
+            const topCashVal1 = parseFloat(document.getElementById('top-cash-col1')?.value) || 0;
+            const topCashVal2 = parseFloat(document.getElementById('top-cash-col2')?.value) || 0;
+            const topCashVal = topCashVal2 || topCashVal1 || 0;
+
+            const bkashSum = parseFloat(document.getElementById('sub-bkash')?.value) || 0;
+            const nagadSum = parseFloat(document.getElementById('sub-nagad')?.value) || 0;
+
+            // Collect active Bank entries from left table
+            const bankEntries = [];
+            document.querySelectorAll('#main-table tbody tr').forEach(row => {
+                const nameInput = row.querySelector('.bank-name');
+                const amtInput = row.querySelector('.bank-amt');
+                if (nameInput && amtInput) {
+                    const name = nameInput.value.trim();
+                    const amt = parseFloat(amtInput.value) || 0;
+                    if (name || amt > 0) {
+                        bankEntries.push({ name: name, amt: amt });
+                    }
+                }
+            });
+
+            const dynamicTbody = document.getElementById('summary-dynamic-tbody');
+            if (!dynamicTbody) return;
+            dynamicTbody.innerHTML = '';
+
+            let runningCash = topCashVal;
+
+            // Build list of active steps
+            let steps = [];
+            if (bkashSum > 0) {
+                steps.push({ type: 'BKASH', desc: 'Bkash Total', amt: bkashSum, isStatic: true });
+            }
+            if (nagadSum > 0) {
+                steps.push({ type: 'NAGAD', desc: 'Nagad Total', amt: nagadSum, isStatic: true });
+            }
+            bankEntries.forEach(bank => {
+                steps.push({ type: 'BANK', desc: bank.name, amt: bank.amt, isStatic: true });
+            });
+            cardEntries.forEach((card, idx) => {
+                if (card.desc || card.amt > 0) {
+                    steps.push({ type: 'CARD', desc: card.desc, amt: card.amt, isStatic: false, arrayType: 'card', index: idx });
+                }
+            });
+            othersEntries.forEach((item, idx) => {
+                if (item.desc || item.amt > 0) {
+                    steps.push({ type: 'OTHERS', desc: item.desc, amt: item.amt, isStatic: false, arrayType: 'others', index: idx });
+                }
+            });
+
+            // Render steps serially; only CASH and TOTAL CASH amounts remain bold
+            steps.forEach((step, index) => {
+                runningCash -= step.amt;
+                const isLast = (index === steps.length - 1);
+                const cashLabel = isLast ? 'TOTAL CASH' : 'CASH';
+
+                const trStep = document.createElement('tr');
+                trStep.setAttribute('data-type', step.type);
+
+                if (step.isStatic) {
+                    trStep.innerHTML = `
+                        <td style="font-weight: normal;">${step.type}</td>
+                        <td><div class="cell-wrapper"><input type="text" class="cell-input" value="${step.desc}" readonly style="font-weight: normal;"></div></td>
+                        <td><div class="cell-wrapper"><input type="number" class="cell-input nav-cell" value="${step.amt || ''}" readonly style="font-weight: normal;"><span class="end-mark">/-</span></div></td>
+                    `;
+                } else if (step.arrayType === 'card') {
+                    trStep.innerHTML = `
+                        <td style="font-weight: normal;">${step.type}</td>
+                        <td><div class="cell-wrapper"><input type="text" class="cell-input nav-cell" value="${step.desc}" oninput="cardEntries[${step.index}].desc=this.value;" style="font-weight: normal;"></div></td>
+                        <td><div class="cell-wrapper"><input type="number" class="cell-input nav-cell" value="${step.amt || ''}" oninput="cardEntries[${step.index}].amt=parseFloat(this.value)||0; calculateSummary();" style="font-weight: normal;"><span class="end-mark">/-</span></div></td>
+                    `;
+                } else if (step.arrayType === 'others') {
+                    trStep.innerHTML = `
+                        <td style="font-weight: normal;">${step.type}</td>
+                        <td><div class="cell-wrapper"><input type="text" class="cell-input nav-cell" value="${step.desc}" oninput="othersEntries[${step.index}].desc=this.value;" style="font-weight: normal;"></div></td>
+                        <td><div class="cell-wrapper"><input type="number" class="cell-input nav-cell" value="${step.amt || ''}" oninput="othersEntries[${step.index}].amt=parseFloat(this.value)||0; calculateSummary();" style="font-weight: normal;"><span class="end-mark">/-</span></div></td>
+                    `;
+                }
+                dynamicTbody.appendChild(trStep);
+
+                const trCash = document.createElement('tr');
+                trCash.setAttribute('data-type', 'CASH_STEP');
+                trCash.innerHTML = `
+                    <td style="font-weight: bold;">${cashLabel}</td>
+                    <td></td>
+                    <td><div class="cell-wrapper"><span class="start-mark">=</span><input type="number" class="cell-input amount-center" value="${topCashVal > 0 ? runningCash : ''}" readonly style="font-weight: bold;"><span class="end-mark">/-</span></div></td>
+                `;
+                dynamicTbody.appendChild(trCash);
+            });
+
+            // Sync Words to final calculated running cash
+            const rightWords = document.getElementById('right-words');
+            if (rightWords) {
+                const hasCalculatedVal = topCashVal > 0 || runningCash !== topCashVal;
+                rightWords.value = numberToWords(hasCalculatedVal ? runningCash : 0);
+            }
+
+            updateEndMarks();
+        }
+
+        // Clear All Function
+        function clearAll() {
+            document.querySelectorAll('input').forEach(input => {
+                if (input.type === 'text' || input.type === 'number') {
+                    input.value = '';
+                }
+            });
+            cardEntries = [];
+            othersEntries = [];
+
+            const dateObj = getTodayFormatted();
+            const leftDate = document.getElementById('left-date');
+            const rightDate = document.getElementById('right-date');
+            if (leftDate) {
+                leftDate.value = dateObj.formatted;
+                leftDate.dataset.isoValue = dateObj.iso;
+            }
+            if (rightDate) {
+                rightDate.value = dateObj.formatted;
+                rightDate.dataset.isoValue = dateObj.iso;
+            }
+            
+            calculateLeftTable();
+            calculateSummary();
+            updateEndMarks();
+        }
+
+        // Keyboard Navigation (Enter / Arrow keys inside table)
+        document.addEventListener('keydown', function(e) {
+            if (['Enter', 'ArrowRight', 'ArrowDown'].includes(e.key)) {
+                if (document.activeElement.classList.contains('nav-cell')) {
+                    const inputs = Array.from(document.querySelectorAll('input.nav-cell'));
+                    const index = inputs.indexOf(document.activeElement);
+                    if (index !== -1 && index < inputs.length - 1) {
+                        e.preventDefault();
+                        inputs[index + 1].focus();
+                        inputs[index + 1].select();
+                    }
+                }
+            } else if (['ArrowLeft', 'ArrowUp'].includes(e.key)) {
+                if (document.activeElement.classList.contains('nav-cell')) {
+                    const inputs = Array.from(document.querySelectorAll('input.nav-cell'));
+                    const index = inputs.indexOf(document.activeElement);
+                    if (index > 0) {
+                        e.preventDefault();
+                        inputs[index - 1].focus();
+                        inputs[index - 1].select();
+                    }
+                }
+            }
+        });
+    </script>
+	<script>
+  // Right click disable
+  document.addEventListener('contextmenu', event => event.preventDefault());
+
+  // Shortcuts disable (F12, Ctrl+U)
+  document.onkeydown = function(e) {
+    if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 85)) {
+      return false;
+    }
+  }
+</script>
+</body>
+</html>
