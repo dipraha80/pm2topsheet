@@ -993,4 +993,19 @@
   }
 </script>
 </body>
+	<script>
+  // Right-click বন্ধ করার জন্য
+  document.addEventListener('contextmenu', event => event.preventDefault());
+
+  // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, F12 বন্ধ করার জন্য
+  document.onkeydown = function(e) {
+    if (
+      e.keyCode === 123 || 
+      (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+      (e.ctrlKey && e.keyCode === 85)
+    ) {
+      return false;
+    }
+  };
+</script>
 </html>
